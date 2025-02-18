@@ -10,12 +10,13 @@ numpy = "^2.0.0"
 matplotlib = "*"
 scipy = "^1.15.1"
 scikit-image = "^0.25.1"
+pytest = "*"
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.5"
 ruff = "*"
 pre-commit = "*"
-pytest = "*"
+
 
 [build-system]
 requires = ["poetry-core"]
