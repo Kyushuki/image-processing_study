@@ -24,7 +24,7 @@ def test_get_false_color_img():
     """Проверяет get_false_color_img."""
     levels = get_levels(num_intervals=5)
     color_map = get_color_map(num_intervals=5)
-    img = np.random.randint(low=0, high=256, size=(25, 10)).astype(int)
+    img = np.random.randint(low=0, high=256, size=(25, 10))
 
     img_color = get_false_color_img(img, levels, color_map)
 
