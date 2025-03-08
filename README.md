@@ -19,6 +19,12 @@ pip install -r requirements.txt
 
 Если не создавать виртуальное окружение вручную, то Poetry создаст его за вас (см. [docs](https://python-poetry.org/docs/basic-usage/#using-your-virtual-environment))
 
+### Jupyter Notebooks
+Работать с Jupyter Notebook можно в разных средах и используя разные инструменты, например:
+- Работа с `.ipynb` в [VS Code](https://code.visualstudio.com/docs/datascience/jupyter-notebooks)
+- [Installing Jupyter](https://jupyter.org/install) (JupyterLab или Jupyter Notebook)
+- [Google Colaboratory](https://colab.google/)
+
 # Тестирование
 Вы можете воспользоваться тестами из папки `tests` для проверки правильности реализации функций из заданий. Для тестирования всех функций из всех заданий необходимо выполнить 
 ```
