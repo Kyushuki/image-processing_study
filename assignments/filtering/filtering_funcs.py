@@ -42,11 +42,11 @@ def get_filtered_image(img: np.ndarray, kern: np.ndarray) -> np.ndarray:
     pass
 
 
-def high_pass_kernel(size: tuple, cutoff: float, order: int) -> np.ndarray:
+def high_pass_kernel(kern_size: tuple, cutoff: float, order: int) -> np.ndarray:
     """Возвращает ядро фильтра Баттерворта в частотной области.
 
     Args:
-        size (tuple): размер фильтра
+        kern_size (tuple): размер фильтра
         cutoff (float): частота среза
         order (int): порядок фильтра
 
