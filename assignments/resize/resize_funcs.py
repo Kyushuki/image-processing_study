@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def downsample_no_filter(img: np.ndarray) -> np.ndarray:
+def downsample_no_filter(img: np.ndarray,f=2) -> np.ndarray:
     """Уменьшает размер изображения без использования сглаживающего фильтра.
 
     Args:
@@ -11,7 +11,10 @@ def downsample_no_filter(img: np.ndarray) -> np.ndarray:
         np.ndarray: уменьшенное изображение
 
     """
-    pass
+    h = img.shape[0]
+    w = img.shape[1]
+    res = img[:h - h%2,:w - w%2]
+    return res[::f,::f]
 
 
 def get_pad_img(img: np.ndarray, zeros_num: int) -> np.ndarray:
@@ -25,7 +28,15 @@ def get_pad_img(img: np.ndarray, zeros_num: int) -> np.ndarray:
         np.ndarray: изображение c нулями на границах
 
     """
-    pass
+    z = 2 * zeros_num
+    h = img.shape[0] + z
+    w = img.shape[1] + z 
+
+    nulls = np.zeros((h,w))
+
+    nulls[zeros_num:zeros_num+(h-z),zeros_num:zeros_num+(w-z)] = img 
+
+    return nulls
 
 
 def convolve_2d(img: np.ndarray, kern: np.ndarray) -> np.ndarray:
@@ -39,8 +50,19 @@ def convolve_2d(img: np.ndarray, kern: np.ndarray) -> np.ndarray:
         np.ndarray: результат свертки
 
     """
-    # img_padded = get_pad_img(img, zeros_num=)
-    pass
+    img_padded = get_pad_img(img, zeros_num=kern.shape[0]//2)
+    h, w = img_padded.shape 
+    k_h, k_w = kern.shape 
+    result = np.zeros((h - k_h + 1, w - k_w + 1))
+    f_kern = np.flip(kern, axis=(0,1))
+    # print(result)
+    for i in range(result.shape[0]):
+        for j in range(result.shape[1]):
+            r_img = img_padded[i:i+k_h,j:j+k_w]
+            result[i,j] = np.sum(r_img * f_kern)
+    # print(result.shape)
+    # print(result)
+    return result
 
 
 def gauss_kernel(kern_size: tuple, sigma: float) -> np.ndarray:
@@ -54,7 +76,19 @@ def gauss_kernel(kern_size: tuple, sigma: float) -> np.ndarray:
         np.ndarray: гауссовское ядро
 
     """
-    pass
+    p, q = kern_size
+    kernel = np.zeros((p,q))
+    
+    h = lambda x,y: np.exp(-(x**2+y**2) / (2 * sigma**2)) / (2 * np.pi * sigma)
+
+    pc, pq = p//2, q//2
+    for i in range(p):
+        x = i - pc 
+        for j in range(q):
+            y = j - pq
+            kernel[i][j] = h(x,y)
+    # print(f"Сумма ядра {np.sum(kernel)}")
+    return kernel 
 
 
 def expand_img(img: np.ndarray, row_col_num: int) -> np.ndarray:
@@ -68,7 +102,16 @@ def expand_img(img: np.ndarray, row_col_num: int) -> np.ndarray:
         np.ndarray: расширенное изображение
 
     """
-    pass
+    p,q = img.shape
+    k = row_col_num
+    h = p*(k+1)
+    w = q*(k+1)
+    nulls = np.zeros((h,w))
+    # for i in range(p):
+    #     for j in range(q):
+    #         nulls[i*(k+1),j*(k+1)] = img[i,j]
+    nulls[::k+1,::k+1] = img
+    return nulls
 
 
 def bilin_kernel(l_param: int):
@@ -78,4 +121,14 @@ def bilin_kernel(l_param: int):
         l_param (int): размер фильтра (одинаков вдоль обоих измерений)
 
     """
-    pass
+    kern = np.zeros((l_param,l_param))
+
+    beta = 1/(1 + l_param/2)
+    h = lambda x: np.max(1-np.abs(beta*x),0)
+    h_k = np.ndarray(l_param)
+    for i in range(l_param):
+        h_k[i]=h(i-l_param//2)
+    for i in range(l_param):
+        for j in range(l_param):
+            kern[i][j] = h_k[i]*h_k[j]
+    return kern
