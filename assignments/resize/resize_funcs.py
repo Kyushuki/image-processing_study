@@ -1,11 +1,12 @@
 import numpy as np
 
 
-def downsample_no_filter(img: np.ndarray,f=5) -> np.ndarray:
+def downsample_no_filter(img: np.ndarray,c: int =5) -> np.ndarray:
     """Уменьшает размер изображения без использования сглаживающего фильтра.
 
     Args:
         img (np.ndarray): изображение
+        c (int) : коэффициент уменьшения 
 
     Returns:
         np.ndarray: уменьшенное изображение
@@ -14,7 +15,7 @@ def downsample_no_filter(img: np.ndarray,f=5) -> np.ndarray:
     h = img.shape[0]
     w = img.shape[1]
     res = img[:h - h%2,:w - w%2]
-    return res[::f,::f]
+    return res[::c,::c]
 
 
 def get_pad_img(img: np.ndarray, zeros_num: int) -> np.ndarray:
