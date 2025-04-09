@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def downsample_no_filter(img: np.ndarray,f=2) -> np.ndarray:
+def downsample_no_filter(img: np.ndarray,f=5) -> np.ndarray:
     """Уменьшает размер изображения без использования сглаживающего фильтра.
 
     Args:
