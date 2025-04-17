@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def get_levels(num_intervals: int) -> np.ndarray:
     """Возвращает массив с границами интервалов яркости.
 
@@ -11,7 +10,12 @@ def get_levels(num_intervals: int) -> np.ndarray:
         np.ndarray: массив со значениями границ интервалов
 
     """
-    pass
+    res = np.zeros(num_intervals+1,dtype=int)
+
+    for i in range(1,len(res)):
+        res[i] = res[i-1]+(255//num_intervals)
+
+    return res
 
 
 def get_color_map(num_intervals: int) -> np.ndarray:
@@ -24,7 +28,16 @@ def get_color_map(num_intervals: int) -> np.ndarray:
         np.ndarray: color map
 
     """
-    pass
+    from matplotlib.pyplot import get_cmap
+
+    p = num_intervals
+    res = np.ndarray((p,3))
+    colors = get_cmap('plasma')
+    
+    for i in range(p):
+        rgb = colors(i/(p-1))
+        res[i] = rgb[:3]
+    return res
 
 
 def get_false_color_img(img: np.ndarray, levels: np.ndarray, color_map: np.ndarray) -> np.ndarray:
@@ -39,4 +52,14 @@ def get_false_color_img(img: np.ndarray, levels: np.ndarray, color_map: np.ndarr
         np.ndarray: цветное изображение
 
     """
-    pass
+    h, w = img.shape
+    res = np.zeros((h, w, 3), dtype=np.float32)
+
+    for i in range(h):
+        for j in range(w):
+            pixel = img[i, j]
+            for k in range(1, len(levels)):
+                if levels[k-1] <= pixel < levels[k]:
+                    res[i, j] = color_map[k-1] 
+                    break
+    return res
